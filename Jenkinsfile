@@ -34,7 +34,7 @@ pipeline {
                  echo "Building Docker image version: ${IMAGE_TAG}..." 
                 sh '''                     
                   docker build -t ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} .
-                  docker tag ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} $ {ECR_REGISTRY}/${ECR_REPO}:latest
+                  docker tag ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} ${ECR_REGISTRY}/${ECR_REPO}:latest
                ''' 
             }       
        }
@@ -47,7 +47,7 @@ pipeline {
                  )]) {
                sh '''
                   aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY} docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} docker push ${ECR_REGISTRY}/${ECR_REPO}:latest 
-              '''          
+           i   '''          
        }    
          }      
    }     
