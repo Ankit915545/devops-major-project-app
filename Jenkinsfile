@@ -38,20 +38,35 @@ pipeline {
                ''' 
             }       
        }
-       stage('Authenticate & Push to AWS ECR') { 
-         steps { 
-               echo "Authenticating Docker with AWS ECR in region ${AWS_REGION}..."
-               withCredentials([usernamePassword(credentialsId: "${AWS_CREDS}",
-               usernameVariable: 'AWS_ACCESS_KEY_ID', 
-               passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                 )]) {
-               sh '''
-                  aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY} docker push ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} docker push ${ECR_REGISTRY}/${ECR_REPO}:latest 
-              '''          
-       }    
-         }      
-   }     
-}
+       
+stage('Authenticate & Push to AWS ECR') {
+    steps {
+        echo "Authenticating Docker with AWS ECR in region ${AWS_REGION}..."
+
+        withCredentials([usernamePassword(
+            credentialsId: "${AWS_CREDS}",
+            usernameVariable: 'AWS_ACCESS_KEY_ID',
+            passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+        )]) {
+            sh '''
+                set -e
+
+                echo "Checking AWS identity..."
+                aws sts get-caller-identity
+
+                echo "Logging in to AWS ECR..."
+                aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$ECR_REGISTRY"
+
+                echo "Pushing versioned image..."
+                docker push "$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG"
+
+                echo "Pushing latest image..."
+                docker push "$ECR_REGISTRY/$ECR_REPO:latest"
+            '''
+          }
+      }
+   }
+ }
       post { 
          always {  
              echo "Executing post-build cleanup to reclaim host disk space..." 
