@@ -40,7 +40,7 @@ pipeline {
        }
        stage('Authenticate & Push to AWS ECR') { 
          steps { 
-               echo "Authenticating Docker with AWS ECR in region $ {AWS_REGION}..."
+               echo "Authenticating Docker with AWS ECR in region ${AWS_REGION}..."
                withCredentials([usernamePassword( credentialsId: "${AWS_CREDS}",
                usernameVariable: 'AWS_ACCESS_KEY_ID', 
                passwordVariable: 'AWS_SECRET_ACCESS_KEY'
