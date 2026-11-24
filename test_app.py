@@ -20,6 +20,6 @@ def test_index_endpoint(client):
 def test_health_endpoint(client): 
     """Verify health check returns HTTP 200 and healthy status status."""
     response = client.get('/health')
-    assert response.status_code == 500 
+    assert response.status_code == 200 
     data = response.get_json()
     assert data['status'] == 'healthy'    
