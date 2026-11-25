@@ -1,6 +1,10 @@
 pipeline {
      agent any
 
+     options {
+    skipDefaultCheckout(true)
+}
+
  environment {
          AWS_REGION   = 'ap-south-1' 
          ECR_REGISTRY = '133210447219.dkr.ecr.ap-south-1.amazonaws.com'
@@ -38,6 +42,7 @@ pipeline {
                ''' 
             }       
        }
+
        
 stage('Authenticate & Push to AWS ECR') {
     steps {
@@ -71,8 +76,18 @@ stage('Authenticate & Push to AWS ECR') {
          always {  
              echo "Executing post-build cleanup to reclaim host disk space..." 
           sh '''
-               docker rmi ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} || true docker rmi ${ECR_REGISTRY}/${ECR_REPO}:latest || true rm -rf venv 
+               docker rmi ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG} || true 
+               docker rmi ${ECR_REGISTRY}/${ECR_REPO}:latest || true 
+               rm -rf venv
+               echo "Cleanup completed." 
           '''
     }
+      success {
+            echo "Part A CI Pipeline completed successfully."
+        }
+
+        failure {
+            echo "Part A CI Pipeline failed. Check Jenkins console output."
+        }
   }
 }   
