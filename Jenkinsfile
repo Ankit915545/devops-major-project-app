@@ -10,7 +10,8 @@ pipeline {
          ECR_REGISTRY = '133210447219.dkr.ecr.ap-south-1.amazonaws.com'
          ECR_REPO     = 'devops-major-project'
          IMAGE_TAG    = "${env.BUILD_NUMBER}"    
-         AWS_CREDS    = 'aws-ecr-credentials' // Match your Jenkins Credential ID  
+         AWS_CREDS    = 'aws-ecr-credentials' // Match your Jenkins Credential ID
+         EC2_HOST     = '13.204.246.218'  
    }
 
  stages {  
