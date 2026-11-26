@@ -11,7 +11,8 @@ pipeline {
          ECR_REPO     = 'devops-major-project'
          IMAGE_TAG    = "${env.BUILD_NUMBER}"    
          AWS_CREDS    = 'aws-ecr-credentials' // Match your Jenkins Credential ID
-         EC2_HOST     = '13.204.246.218'  
+         EC2_HOST     = '13.204.246.218'
+         SSH_CREDS    = 'ec2-deploy-ssh-key'  
    }
 
  stages {  
